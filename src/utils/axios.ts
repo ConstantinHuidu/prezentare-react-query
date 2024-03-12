@@ -8,12 +8,12 @@ function authRequestInterceptor(config: any) {
   return config;
 }
 
-export const bshApi = Axios.create({
+export const axiosApi = Axios.create({
   baseURL: API_URL,
 });
 
-bshApi.interceptors.request.use(authRequestInterceptor);
-bshApi.interceptors.response.use(
+axiosApi.interceptors.request.use(authRequestInterceptor);
+axiosApi.interceptors.response.use(
   (response) => {
     return response.data;
   },
