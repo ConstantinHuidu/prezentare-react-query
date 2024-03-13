@@ -1,6 +1,6 @@
 import { Box, Button, TextField } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { User } from "./useGetUsers";
+import { User } from "./hooks/useGetUsers";
 
 type Props = {
   handleClose: () => void;

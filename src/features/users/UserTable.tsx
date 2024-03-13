@@ -1,15 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
-import { User, getUsers } from "./useGetUsers";
 import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { ToggleUserStatusModalBody } from "./ToggleUserStatusModalBody";
+
+import { User, getUsers } from "./hooks/useGetUsers";
+import { Block, CheckCircle, Edit } from "@mui/icons-material";
+import { useModal } from "../../hooks/useModal";
+import { CustomModal } from "../../components/CustomModal";
+import {
+  StatusUpdateParams,
+  toggleUserStatus,
+} from "./hooks/useUpdateUserStatus";
+import { showToast } from "../../utils/show-toast";
+
+import { Box, IconButton } from "@mui/material";
 
 import {
-  //   MRT_SortingState,
   type MRT_ColumnDef,
   useMaterialReactTable,
   MaterialReactTable,
 } from "material-react-table";
-import { Box, IconButton } from "@mui/material";
-import { Block, CheckCircle, Edit } from "@mui/icons-material";
 
 export const DEFAULT_PAGINATION = {
   pageIndex: 0,
@@ -17,7 +27,22 @@ export const DEFAULT_PAGINATION = {
 };
 
 export const UserTable = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    isOpen: isToggleModalOpen,
+    handleCloseModal: handleCloseToggleModal,
+    handleOpenModal: handleOpenToggleModal,
+  } = useModal();
+
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  const { mutateAsync: toggleStatus } = useMutation({
+    mutationKey: ["toggle-status"],
+    mutationFn: ({ id, requestBody }: StatusUpdateParams) =>
+      toggleUserStatus({ id, requestBody }),
+  });
 
   const {
     data: users = [],
@@ -27,6 +52,25 @@ export const UserTable = () => {
     queryKey: ["users"],
     queryFn: () => getUsers(),
   });
+
+  const handleToggleUserStatus = () => {
+    const id = selectedUser?.id as string;
+    const requestBody = {
+      ...(selectedUser as User),
+      isActive: !selectedUser?.isActive,
+    };
+
+    toggleStatus(
+      { id, requestBody },
+      {
+        onSuccess: () => {
+          handleCloseToggleModal();
+          showToast("success", "Status updated successfully!");
+          queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+      }
+    );
+  };
 
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
@@ -62,7 +106,12 @@ export const UserTable = () => {
               <IconButton>
                 <Edit color="primary" />
               </IconButton>
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  handleOpenToggleModal();
+                  setSelectedUser(row.original);
+                }}
+              >
                 {row.original.isActive ? (
                   <Block color="error" />
                 ) : (
@@ -104,6 +153,18 @@ export const UserTable = () => {
   return (
     <>
       <MaterialReactTable table={table} />
+      <CustomModal
+        isOpen={isToggleModalOpen}
+        handleClose={handleCloseToggleModal}
+        title={selectedUser?.isActive ? "Deactivate user" : "Activate user"}
+        modalBody={
+          <ToggleUserStatusModalBody
+            handleClose={handleCloseToggleModal}
+            handleConfirm={handleToggleUserStatus}
+            user={selectedUser as User}
+          />
+        }
+      />
     </>
   );
 };

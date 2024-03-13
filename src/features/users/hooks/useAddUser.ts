@@ -1,4 +1,4 @@
-import { axiosApi } from "../../utils/axios";
+import { axiosApi } from "../../../utils/axios";
 import { User } from "./useGetUsers";
 
 const USERS_LIST_ROOT = "/users";

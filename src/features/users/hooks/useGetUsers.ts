@@ -1,8 +1,9 @@
-import { axiosApi } from "../../utils/axios";
+import { axiosApi } from "../../../utils/axios";
 
 const USERS_LIST_ROOT = "/users";
 
 export type User = {
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;

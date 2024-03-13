@@ -7,9 +7,9 @@ import { Box, Button } from "@mui/material";
 
 import { useModal } from "../../hooks/useModal";
 import { showToast } from "../../utils/show-toast";
-import { addUser } from "./useAddUser";
+import { addUser } from "./hooks/useAddUser";
 
-import { User } from "./useGetUsers";
+import { User } from "./hooks/useGetUsers";
 
 export const AddButton = () => {
   const { isOpen, handleCloseModal, handleOpenModal } = useModal();
