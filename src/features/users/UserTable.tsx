@@ -2,24 +2,26 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { ToggleUserStatusModalBody } from "./ToggleUserStatusModalBody";
-
-import { User, getUsers } from "./hooks/useGetUsers";
-import { Block, CheckCircle, Edit } from "@mui/icons-material";
-import { useModal } from "../../hooks/useModal";
 import { CustomModal } from "../../components/CustomModal";
+
+import { Box, IconButton } from "@mui/material";
+import { Block, CheckCircle, Edit } from "@mui/icons-material";
+
+import { showToast } from "../../utils/show-toast";
+import { useModal } from "../../hooks/useModal";
+import { User, getUsers } from "./hooks/useGetUsers";
 import {
   StatusUpdateParams,
   toggleUserStatus,
 } from "./hooks/useUpdateUserStatus";
-import { showToast } from "../../utils/show-toast";
-
-import { Box, IconButton } from "@mui/material";
 
 import {
   type MRT_ColumnDef,
   useMaterialReactTable,
   MaterialReactTable,
 } from "material-react-table";
+import { AddUserForm } from "./AddUserForm";
+import { updateUserInfo } from "./hooks/useUpdateUserInfo";
 
 export const DEFAULT_PAGINATION = {
   pageIndex: 0,
@@ -35,6 +37,12 @@ export const UserTable = () => {
     handleOpenModal: handleOpenToggleModal,
   } = useModal();
 
+  const {
+    isOpen: isEditModalOpen,
+    handleCloseModal: handleCloseEditModal,
+    handleOpenModal: handleOpenEditModal,
+  } = useModal();
+
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
@@ -42,6 +50,12 @@ export const UserTable = () => {
     mutationKey: ["toggle-status"],
     mutationFn: ({ id, requestBody }: StatusUpdateParams) =>
       toggleUserStatus({ id, requestBody }),
+  });
+
+  const { mutateAsync: updateUser } = useMutation({
+    mutationFn: ({ id, requestBody }: StatusUpdateParams) =>
+      updateUserInfo({ id, requestBody }),
+    mutationKey: ["update-user-info"],
   });
 
   const {
@@ -66,6 +80,20 @@ export const UserTable = () => {
         onSuccess: () => {
           handleCloseToggleModal();
           showToast("success", "Status updated successfully!");
+          queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+      }
+    );
+  };
+
+  const handleUpdateUserInfo = (user: User) => {
+    const id = user.id as string;
+    updateUser(
+      { id, requestBody: user },
+      {
+        onSuccess: () => {
+          handleCloseEditModal();
+          showToast("success", "User info updated successfully!");
           queryClient.invalidateQueries({ queryKey: ["users"] });
         },
       }
@@ -103,7 +131,12 @@ export const UserTable = () => {
         Cell: ({ row }) => {
           return (
             <Box display="flex" gap="18px" justifyContent="center">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  handleOpenEditModal();
+                  setSelectedUser(row.original);
+                }}
+              >
                 <Edit color="primary" />
               </IconButton>
               <IconButton
@@ -153,6 +186,7 @@ export const UserTable = () => {
   return (
     <>
       <MaterialReactTable table={table} />
+
       <CustomModal
         isOpen={isToggleModalOpen}
         handleClose={handleCloseToggleModal}
@@ -162,6 +196,19 @@ export const UserTable = () => {
             handleClose={handleCloseToggleModal}
             handleConfirm={handleToggleUserStatus}
             user={selectedUser as User}
+          />
+        }
+      />
+
+      <CustomModal
+        isOpen={isEditModalOpen}
+        handleClose={handleCloseEditModal}
+        title="Edit user info"
+        modalBody={
+          <AddUserForm
+            user={selectedUser as User}
+            handleClose={handleCloseEditModal}
+            handleConfirm={handleUpdateUserInfo}
           />
         }
       />

@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from "react";
 import { User } from "./hooks/useGetUsers";
 
 type Props = {
+  user?: User;
   handleClose: () => void;
   handleConfirm: (user: User) => void;
 };
@@ -15,12 +16,12 @@ const defaultUser: User = {
 };
 
 export const AddUserForm = (props: Props) => {
-  const { handleClose, handleConfirm } = props;
-  const [user, setUser] = useState(defaultUser);
+  const { user = defaultUser, handleClose, handleConfirm } = props;
+  const [currentUser, setCurrentUser] = useState(user);
 
   const handleChangeUser = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUser((prev) => ({ ...prev, [name]: value }));
+    setCurrentUser((prev) => ({ ...prev, [name]: value }));
   };
   return (
     <Box component="form" display="flex" flexDirection="column" gap="24px">
@@ -28,21 +29,21 @@ export const AddUserForm = (props: Props) => {
         name="firstName"
         label="First Name"
         fullWidth
-        value={user.firstName}
+        value={currentUser.firstName}
         onChange={handleChangeUser}
       />
       <TextField
         name="lastName"
         label="Last Name"
         fullWidth
-        value={user.lastName}
+        value={currentUser.lastName}
         onChange={handleChangeUser}
       />
       <TextField
         name="email"
         label="Email"
         fullWidth
-        value={user.email}
+        value={currentUser.email}
         onChange={handleChangeUser}
       />
 
@@ -53,9 +54,9 @@ export const AddUserForm = (props: Props) => {
         <Button
           color="success"
           variant="contained"
-          onClick={() => handleConfirm(user)}
+          onClick={() => handleConfirm(currentUser)}
         >
-          Add user
+          {user.firstName === "" ? "Add user" : "Update info"}
         </Button>
       </Box>
     </Box>
