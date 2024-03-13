@@ -3,30 +3,27 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { ToggleUserStatusModalBody } from "./ToggleUserStatusModalBody";
 import { CustomModal } from "../../components/CustomModal";
-
-import { Box, IconButton } from "@mui/material";
-import { Block, CheckCircle, Edit } from "@mui/icons-material";
+import { UserForm } from "./UserForm";
+import { ActionsCell } from "./ActionsCell";
+import { StatusCell } from "./StatusCell";
 
 import { showToast } from "../../utils/show-toast";
 import { useModal } from "../../hooks/useModal";
-import { User, getUsers } from "./hooks/useGetUsers";
 import {
   StatusUpdateParams,
+  User,
+  getUsers,
   toggleUserStatus,
-} from "./hooks/useUpdateUserStatus";
+  updateUserInfo,
+} from "./hooks";
+
+import { DEFAULT_PAGINATION } from "../../config/constants";
 
 import {
   type MRT_ColumnDef,
   useMaterialReactTable,
   MaterialReactTable,
 } from "material-react-table";
-import { AddUserForm } from "./AddUserForm";
-import { updateUserInfo } from "./hooks/useUpdateUserInfo";
-
-export const DEFAULT_PAGINATION = {
-  pageIndex: 0,
-  pageSize: 25,
-};
 
 export const UserTable = () => {
   const queryClient = useQueryClient();
@@ -110,19 +107,7 @@ export const UserTable = () => {
         accessorKey: "isActive",
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
-        Cell: ({ row }) => {
-          return (
-            <Box
-              display="flex"
-              justifyContent="center"
-              color={row.original.isActive ? "#00b150" : "#ff6700"}
-              fontWeight="700"
-              fontSize="14px"
-            >
-              {row.original.isActive ? "ACTIVE" : "INACTIVE"}
-            </Box>
-          );
-        },
+        Cell: ({ row }) => <StatusCell row={row} />,
       },
       {
         header: "Actions",
@@ -130,28 +115,17 @@ export const UserTable = () => {
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ row }) => {
           return (
-            <Box display="flex" gap="18px" justifyContent="center">
-              <IconButton
-                onClick={() => {
-                  handleOpenEditModal();
-                  setSelectedUser(row.original);
-                }}
-              >
-                <Edit color="primary" />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  handleOpenToggleModal();
-                  setSelectedUser(row.original);
-                }}
-              >
-                {row.original.isActive ? (
-                  <Block color="error" />
-                ) : (
-                  <CheckCircle color="success" />
-                )}
-              </IconButton>
-            </Box>
+            <ActionsCell
+              row={row}
+              handleEditClick={() => {
+                handleOpenEditModal();
+                setSelectedUser(row.original);
+              }}
+              handleToggleClick={() => {
+                handleOpenToggleModal();
+                setSelectedUser(row.original);
+              }}
+            />
           );
         },
       },
@@ -205,7 +179,7 @@ export const UserTable = () => {
         handleClose={handleCloseEditModal}
         title="Edit user info"
         modalBody={
-          <AddUserForm
+          <UserForm
             user={selectedUser as User}
             handleClose={handleCloseEditModal}
             handleConfirm={handleUpdateUserInfo}

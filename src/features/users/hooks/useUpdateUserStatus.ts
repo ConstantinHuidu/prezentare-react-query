@@ -1,12 +1,6 @@
+import { USERS_LIST_ROOT } from "../../../config/constants";
 import { axiosApi } from "../../../utils/axios";
-import { User } from "./useGetUsers";
-
-const USERS_LIST_ROOT = "/users";
-
-export type StatusUpdateParams = {
-  id: string;
-  requestBody: User;
-};
+import { StatusUpdateParams } from "./useUpdateUserInfo";
 
 export const toggleUserStatus = ({
   id,

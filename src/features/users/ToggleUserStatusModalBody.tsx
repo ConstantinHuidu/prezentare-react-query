@@ -14,11 +14,23 @@ export const ToggleUserStatusModalBody = (props: Props) => {
   return (
     <Box display="flex" flexDirection="column" gap="38px">
       <Typography>{`By clicking confirm you will ${modalAction} this user`}</Typography>
+
       <Box display="flex" justifyContent="flex-end" gap="18px">
-        <Button color="error" variant="outlined" onClick={handleClose}>
+        <Button
+          size="small"
+          color="error"
+          variant="outlined"
+          onClick={handleClose}
+        >
           Cancel
         </Button>
-        <Button color="success" variant="contained" onClick={handleConfirm}>
+
+        <Button
+          size="small"
+          color="success"
+          variant="contained"
+          onClick={handleConfirm}
+        >
           Confirm
         </Button>
       </Box>

@@ -1,15 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { CustomModal } from "../../components/CustomModal";
-import { AddUserForm } from "./AddUserForm";
+import { UserForm } from "./UserForm";
 
 import { Box, Button } from "@mui/material";
 
 import { useModal } from "../../hooks/useModal";
 import { showToast } from "../../utils/show-toast";
-import { addUser } from "./hooks/useAddUser";
-
-import { User } from "./hooks/useGetUsers";
+import { User, addUser } from "./hooks";
 
 export const AddButton = () => {
   const { isOpen, handleCloseModal, handleOpenModal } = useModal();
@@ -42,7 +40,7 @@ export const AddButton = () => {
         title="Add new user"
         handleClose={handleCloseModal}
         modalBody={
-          <AddUserForm
+          <UserForm
             handleClose={handleCloseModal}
             handleConfirm={handleAddUser}
           />

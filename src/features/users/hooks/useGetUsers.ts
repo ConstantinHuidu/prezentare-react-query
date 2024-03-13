@@ -1,6 +1,5 @@
+import { USERS_LIST_ROOT } from "../../../config/constants";
 import { axiosApi } from "../../../utils/axios";
-
-const USERS_LIST_ROOT = "/users";
 
 export type User = {
   id?: string;

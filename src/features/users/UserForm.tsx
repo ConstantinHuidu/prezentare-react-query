@@ -15,7 +15,7 @@ const defaultUser: User = {
   isActive: false,
 };
 
-export const AddUserForm = (props: Props) => {
+export const UserForm = (props: Props) => {
   const { user = defaultUser, handleClose, handleConfirm } = props;
   const [currentUser, setCurrentUser] = useState(user);
 
@@ -26,6 +26,7 @@ export const AddUserForm = (props: Props) => {
   return (
     <Box component="form" display="flex" flexDirection="column" gap="24px">
       <TextField
+        size="small"
         name="firstName"
         label="First Name"
         fullWidth
@@ -33,6 +34,7 @@ export const AddUserForm = (props: Props) => {
         onChange={handleChangeUser}
       />
       <TextField
+        size="small"
         name="lastName"
         label="Last Name"
         fullWidth
@@ -40,6 +42,7 @@ export const AddUserForm = (props: Props) => {
         onChange={handleChangeUser}
       />
       <TextField
+        size="small"
         name="email"
         label="Email"
         fullWidth
@@ -48,10 +51,16 @@ export const AddUserForm = (props: Props) => {
       />
 
       <Box display="flex" justifyContent="flex-end" gap="18px">
-        <Button color="error" variant="outlined" onClick={handleClose}>
+        <Button
+          size="small"
+          color="error"
+          variant="outlined"
+          onClick={handleClose}
+        >
           Cancel
         </Button>
         <Button
+          size="small"
           color="success"
           variant="contained"
           onClick={() => handleConfirm(currentUser)}
