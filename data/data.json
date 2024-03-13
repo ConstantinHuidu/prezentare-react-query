@@ -1,30 +1,35 @@
 {
   "users": [
     {
+      "id": "9f7369bf-8f4b-45d8-a4c1-791d8f8d2707",
       "firstName": "John",
       "lastName": "Doe",
       "email": "john.doe@example.com",
       "isActive": true
     },
     {
+      "id": "1bbf7fd4-8f89-491d-8ee0-6d3c2c7941ef",
       "firstName": "Jane",
       "lastName": "Smith",
       "email": "jane.smith@example.com",
       "isActive": true
     },
     {
+      "id": "c3bfe1e2-c1b3-462e-925d-d1d8860d28a8",
       "firstName": "Michael",
       "lastName": "Johnson",
       "email": "michael.johnson@example.com",
       "isActive": false
     },
     {
+      "id": "ac5b7f32-16cf-4a76-aebe-2bbf9d80f446",
       "firstName": "Emily",
       "lastName": "Brown",
       "email": "emily.brown@example.com",
       "isActive": true
     },
     {
+      "id": "7b19cd9e-bf28-4954-9c51-bd86d79b5c82",
       "firstName": "David",
       "lastName": "Lee",
       "email": "david.lee@example.com",
