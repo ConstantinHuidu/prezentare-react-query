@@ -14,7 +14,7 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <ToastContainer />
-        <h2>Prezentare React Query</h2>
+        <h2> REACT QUERY</h2>
         <UsersDashboard />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

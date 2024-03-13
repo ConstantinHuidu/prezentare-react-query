@@ -18,7 +18,7 @@ export const DEFAULT_PAGINATION = {
 
 export const UserTable = () => {
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
-  //   const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const {
     data: users = [],
     isLoading,
@@ -59,10 +59,10 @@ export const UserTable = () => {
         Cell: ({ row }) => {
           return (
             <Box display="flex" gap="18px" justifyContent="center">
-              <IconButton sx={{ fontSize: "12px" }}>
+              <IconButton>
                 <Edit color="primary" />
               </IconButton>
-              <IconButton sx={{ fontSize: "12px" }}>
+              <IconButton>
                 {row.original.isActive ? (
                   <Block color="error" />
                 ) : (
