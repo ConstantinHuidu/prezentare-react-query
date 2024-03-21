@@ -150,7 +150,7 @@ export const OGUserTable = () => {
       <CustomModal
         isOpen={isEditModalOpen}
         handleClose={handleCloseEditModal}
-        title="Edit user info"
+        title="Update user info"
         modalBody={
           <UserForm
             user={selectedUser as User}
