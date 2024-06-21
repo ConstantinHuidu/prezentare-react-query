@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { ToggleUserStatusModalBody } from "./ToggleUserStatusModalBody";
 import { CustomModal } from "../../components/CustomModal";
@@ -12,9 +12,9 @@ import { useModal } from "../../hooks/useModal";
 import {
   StatusUpdateParams,
   User,
-  getUsers,
-  toggleUserStatus,
   updateUserInfo,
+  useGetUsers,
+  useUpdateUserStatus,
 } from "./hooks";
 
 import { DEFAULT_PAGINATION } from "../../config/constants";
@@ -40,28 +40,16 @@ export const UserTable = () => {
     handleOpenModal: handleOpenEditModal,
   } = useModal();
 
+  const { users, isError, isLoading } = useGetUsers();
+  const { toggleStatus } = useUpdateUserStatus();
+
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
-  const { mutateAsync: toggleStatus } = useMutation({
-    mutationKey: ["toggle-status"],
-    mutationFn: ({ id, requestBody }: StatusUpdateParams) =>
-      toggleUserStatus({ id, requestBody }),
-  });
 
   const { mutateAsync: updateUser } = useMutation({
     mutationFn: ({ id, requestBody }: StatusUpdateParams) =>
       updateUserInfo({ id, requestBody }),
     mutationKey: ["update-user-info"],
-  });
-
-  const {
-    data: users = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => getUsers(),
   });
 
   const handleToggleUserStatus = () => {
@@ -77,7 +65,6 @@ export const UserTable = () => {
         onSuccess: () => {
           handleCloseToggleModal();
           showToast("success", "Status updated successfully!");
-          queryClient.invalidateQueries({ queryKey: ["users"] });
         },
       }
     );

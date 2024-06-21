@@ -31,7 +31,7 @@ export const AddButton = () => {
   return (
     <>
       <Box display="flex" marginBottom="12px">
-        <Button variant="outlined" onClick={handleOpenModal}>
+        <Button variant="contained" onClick={handleOpenModal}>
           Add new user
         </Button>
       </Box>
